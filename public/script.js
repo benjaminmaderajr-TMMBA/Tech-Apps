@@ -95,7 +95,7 @@ document.querySelectorAll('.btn').forEach(button => {
 });
 
 // Console message
-console.log('%c Benjamin Madera JR - Portfolio', 'color: #2563eb; font-size: 24px; font-weight: bold;');
+console.log('%c Benjamin Madera Jr - Portfolio', 'color: #2563eb; font-size: 24px; font-weight: bold;');
 console.log('%c Senior Military Officer | Program Management & Leadership Expert', 'color: #3b82f6; font-size: 14px;');
 
 // Email Tooltip Functionality
