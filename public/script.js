@@ -97,3 +97,148 @@ document.querySelectorAll('.btn').forEach(button => {
 // Console message
 console.log('%c Benjamin Madera JR - Portfolio', 'color: #2563eb; font-size: 24px; font-weight: bold;');
 console.log('%c Senior Military Officer | Program Management & Leadership Expert', 'color: #3b82f6; font-size: 14px;');
+
+// Email Tooltip Functionality
+let currentTooltip = null;
+
+// Function to create and show email tooltip
+function showEmailTooltip(email, buttonElement, event) {
+    event.preventDefault();
+
+    // Remove any existing tooltip
+    if (currentTooltip) {
+        currentTooltip.remove();
+    }
+
+    // Create tooltip element
+    const tooltip = document.createElement('div');
+    tooltip.className = 'email-tooltip';
+    tooltip.innerHTML = `
+        <button class="email-tooltip-close" aria-label="Close">&times;</button>
+        <div class="email-tooltip-header">Email Address</div>
+        <div class="email-tooltip-content">${email}</div>
+        <div class="email-tooltip-buttons">
+            <button class="email-tooltip-copy-btn">
+                <i class="fas fa-copy"></i> Copy to Clipboard
+            </button>
+            <button class="email-tooltip-mailto-btn">
+                <i class="fas fa-envelope"></i> Open Email Client
+            </button>
+        </div>
+        <div class="email-tooltip-copied">Copied to clipboard!</div>
+    `;
+
+    // Add tooltip to body
+    document.body.appendChild(tooltip);
+    currentTooltip = tooltip;
+
+    // Position tooltip
+    const buttonRect = buttonElement.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    // Calculate position (centered below button)
+    let left = buttonRect.left + (buttonRect.width / 2) - (tooltipRect.width / 2);
+    let top = buttonRect.bottom + 10;
+
+    // Adjust if tooltip goes off screen
+    if (left < 10) left = 10;
+    if (left + tooltipRect.width > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipRect.width - 10;
+    }
+    if (top + tooltipRect.height > window.innerHeight - 10) {
+        top = buttonRect.top - tooltipRect.height - 10;
+    }
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+
+    // Show tooltip with animation
+    setTimeout(() => tooltip.classList.add('show'), 10);
+
+    // Add event listeners
+    const copyBtn = tooltip.querySelector('.email-tooltip-copy-btn');
+    const mailtoBtn = tooltip.querySelector('.email-tooltip-mailto-btn');
+    const closeBtn = tooltip.querySelector('.email-tooltip-close');
+    const copiedMsg = tooltip.querySelector('.email-tooltip-copied');
+
+    // Copy to clipboard
+    copyBtn.addEventListener('click', async () => {
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(email);
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = email;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+
+            // Show success message
+            copiedMsg.classList.add('show');
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+
+            // Reset after 2 seconds
+            setTimeout(() => {
+                copiedMsg.classList.remove('show');
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy to Clipboard';
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy email:', err);
+            alert('Failed to copy email. Please try again.');
+        }
+    });
+
+    // Open email client
+    mailtoBtn.addEventListener('click', () => {
+        window.location.href = `mailto:${email}`;
+        closeTooltip();
+    });
+
+    // Close button
+    closeBtn.addEventListener('click', closeTooltip);
+
+    // Close on click outside
+    setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+    }, 100);
+}
+
+// Function to close tooltip
+function closeTooltip() {
+    if (currentTooltip) {
+        currentTooltip.classList.remove('show');
+        setTimeout(() => {
+            if (currentTooltip) {
+                currentTooltip.remove();
+                currentTooltip = null;
+            }
+        }, 300);
+        document.removeEventListener('click', handleClickOutside);
+    }
+}
+
+// Handle clicks outside tooltip
+function handleClickOutside(event) {
+    if (currentTooltip && !currentTooltip.contains(event.target) && !event.target.closest('.email-btn')) {
+        closeTooltip();
+    }
+}
+
+// Add event listeners to all email buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const emailButtons = document.querySelectorAll('.email-btn');
+
+    emailButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            const email = this.getAttribute('data-email');
+            if (email) {
+                showEmailTooltip(email, this, event);
+            }
+        });
+    });
+});
