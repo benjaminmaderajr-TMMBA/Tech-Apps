@@ -34,25 +34,29 @@ body {
 /* Hero Section */
 .hero {
     position: relative;
-    height: 100vh;
     min-height: 600px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    background-image: url('images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: var(--bg-dark);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 60px 20px;
 }
 
-.hero-overlay {
+.hero::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
+    height: 300px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #db2777 100%);
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,19 +64,22 @@ body {
 
 .profile-container {
     text-align: center;
-    z-index: 10;
     animation: fadeInUp 1s ease-out;
+    margin-top: 150px;
 }
 
 .profile-image {
-    width: 250px;
-    height: 250px;
+    width: 350px;
+    height: 350px;
     border-radius: 50%;
     border: 5px solid var(--primary-color);
     object-fit: cover;
+    object-position: center;
     margin-bottom: 30px;
     box-shadow: 0 10px 40px rgba(37, 99, 235, 0.5);
     animation: float 3s ease-in-out infinite;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 @keyframes float {
@@ -501,8 +508,8 @@ body {
     }
 
     .profile-image {
-        width: 200px;
-        height: 200px;
+        width: 280px;
+        height: 280px;
     }
 }
 
@@ -522,8 +529,8 @@ body {
     }
 
     .profile-image {
-        width: 180px;
-        height: 180px;
+        width: 220px;
+        height: 220px;
     }
 
     .experience-card {
