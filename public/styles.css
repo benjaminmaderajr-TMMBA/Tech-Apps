@@ -263,6 +263,14 @@ body {
     margin-bottom: 20px;
 }
 
+.cert-image {
+    width: 105px;
+    height: 105px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+}
+
 .cert-badge h4 {
     font-size: 1.1rem;
     margin-bottom: 10px;
