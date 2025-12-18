@@ -55,10 +55,13 @@ app.get('/health', (req, res) => {
 app.get('/api/contact', (req, res) => {
     res.json({
         name: 'Benjamin Madera JR',
-        email: 'benjamin.maderajr@gmail.com',
+        emails: {
+            usarmy: 'benjamin.maderajr@usarmy.vet',
+            gmail: 'benjamin.maderajr@gmail.com'
+        },
         phone: '(407) 636-0708',
         location: 'Lacey, WA 98516',
-        linkedin: 'https://www.linkedin.com/in/benjamin-madera-jr/'
+        linkedin: 'https://www.linkedin.com/feed/'
     });
 });
 
