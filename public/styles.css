@@ -381,11 +381,44 @@ body {
     box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
 }
 
+.edu-date-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 150px;
+}
+
 .edu-date {
     font-weight: 700;
     color: var(--primary-color);
-    min-width: 150px;
     font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.edu-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edu-icon i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.edu-wings {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wings-image {
+    width: 120px;
+    height: auto;
+    filter: brightness(0) saturate(100%) invert(33%) sepia(97%) saturate(1791%) hue-rotate(208deg) brightness(95%) contrast(93%);
+    opacity: 0.9;
 }
 
 .edu-content h3 {
