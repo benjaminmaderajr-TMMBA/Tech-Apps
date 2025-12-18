@@ -417,8 +417,23 @@ body {
 .wings-image {
     width: 120px;
     height: auto;
-    filter: brightness(0) saturate(100%) invert(33%) sepia(97%) saturate(1791%) hue-rotate(208deg) brightness(95%) contrast(93%);
-    opacity: 0.9;
+}
+
+.edu-wings {
+    position: relative;
+}
+
+.edu-honor-badge {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edu-honor-badge i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    opacity: 0.8;
 }
 
 .edu-content h3 {
