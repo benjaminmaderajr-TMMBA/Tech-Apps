@@ -105,9 +105,11 @@ let currentTooltip = null;
 function showEmailTooltip(email, buttonElement, event) {
     event.preventDefault();
 
-    // Remove any existing tooltip
+    // Remove any existing tooltip and its listeners before creating a new one
     if (currentTooltip) {
+        document.removeEventListener('click', handleClickOutside);
         currentTooltip.remove();
+        currentTooltip = null;
     }
 
     // Create tooltip element
@@ -241,4 +243,79 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Skill Highlighting Functionality
+    let activeSkill = null;
+
+    // Function to reset all highlights
+    function resetHighlights() {
+        // Remove active class from all skill cards
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        
+        // Remove highlighted class from all bullet points
+        document.querySelectorAll('.exp-details li').forEach(li => {
+            li.classList.remove('highlighted');
+        });
+        
+        activeSkill = null;
+    }
+
+    // Function to highlight bullets for a specific skill
+    function highlightSkill(skill) {
+        // Reset first
+        resetHighlights();
+        
+        // If clicking the same skill, just reset (toggle off)
+        if (activeSkill === skill) {
+            return;
+        }
+        
+        // Set active skill
+        activeSkill = skill;
+        
+        // Add active class to the clicked skill card
+        const skillCard = document.querySelector(`.skill-card[data-skill="${skill}"]`);
+        if (skillCard) {
+            skillCard.classList.add('active');
+        }
+        
+        // Find and highlight all bullets that contain this skill
+        document.querySelectorAll('.exp-details li').forEach(li => {
+            const skills = li.getAttribute('data-skills');
+            if (skills && skills.split(',').map(s => s.trim()).includes(skill)) {
+                li.classList.add('highlighted');
+            }
+        });
+    }
+
+    // Add click event listeners to skill cards
+    document.querySelectorAll('.skill-card[data-skill]').forEach(card => {
+        card.addEventListener('click', function() {
+            const skill = this.getAttribute('data-skill');
+            highlightSkill(skill);
+        });
+        
+        // Add keyboard support
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const skill = this.getAttribute('data-skill');
+                highlightSkill(skill);
+            }
+        });
+    });
+
+    // Add click event listener to reset button
+    const resetButton = document.getElementById('reset-button');
+    if (resetButton) {
+        resetButton.addEventListener('click', resetHighlights);
+        resetButton.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                resetHighlights();
+            }
+        });
+    }
 });

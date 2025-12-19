@@ -34,13 +34,13 @@ body {
 /* Hero Section */
 .hero {
     position: relative;
-    min-height: 600px;
+    min-height: auto;
     background: var(--bg-dark);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
+    justify-content: flex-start;
+    padding: 40px 20px 20px 20px;
 }
 
 .hero::before {
@@ -51,8 +51,8 @@ body {
     right: 0;
     width: 100%;
     height: 300px;
-    background-image: url('images/Resume Top Boarder.jpg');
-    background-size: contain;
+    background-image: url('images/top boarder picture.png');
+    background-size: 60% 300px;
     background-position: top center;
     background-repeat: no-repeat;
     image-rendering: high-quality;
@@ -70,17 +70,17 @@ body {
 .profile-container {
     text-align: center;
     animation: fadeInUp 1s ease-out;
-    margin-top: 250px;
+    margin-top: 170px;
 }
 
 .profile-image {
-    width: 350px;
-    height: 350px;
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
     border: 5px solid var(--primary-color);
     object-fit: cover;
     object-position: center;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     box-shadow: 0 10px 40px rgba(37, 99, 235, 0.5);
     animation: float 3s ease-in-out infinite;
     image-rendering: -webkit-optimize-contrast;
@@ -97,7 +97,7 @@ body {
 }
 
 .name {
-    font-size: 3.5rem;
+    font-size: 2.8rem;
     font-weight: 700;
     margin-bottom: 10px;
     color: var(--primary-color);
@@ -270,16 +270,16 @@ body {
 
 /* Professional Summary */
 .professional-summary {
-    padding: 80px 0;
+    padding: 5px 0 80px 0;
     background: var(--bg-section);
 }
 
 .section-title {
-    font-size: 2.5rem;
+    font-size: 2.0rem;
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     position: relative;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
 }
 
 .section-title::after {
@@ -296,7 +296,7 @@ body {
 
 .summary-text {
     font-size: 1.2rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--text-secondary);
     max-width: 1000px;
     margin: 0 auto;
@@ -323,12 +323,41 @@ body {
     text-align: center;
     transition: all 0.3s ease;
     border: 2px solid var(--border-color);
+    cursor: pointer;
+    user-select: none;
 }
 
 .skill-card:hover {
     transform: translateY(-10px);
     border-color: var(--primary-color);
     box-shadow: 0 15px 40px rgba(37, 99, 235, 0.3);
+}
+
+.skill-card.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 15px 40px rgba(37, 99, 235, 0.5);
+    transform: translateY(-5px);
+}
+
+.skill-card.active h3,
+.skill-card.active i {
+    color: white;
+}
+
+.skill-reset {
+    background: var(--bg-section);
+    border-color: var(--accent-color);
+}
+
+.skill-reset:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.skill-reset:hover h3,
+.skill-reset:hover i {
+    color: white;
 }
 
 .skill-card i {
@@ -462,6 +491,26 @@ body {
     color: var(--primary-color);
     font-size: 1.5rem;
     line-height: 1.2;
+}
+
+.exp-details li.highlighted {
+    background: rgba(37, 99, 235, 0.15);
+    border-left: 4px solid var(--primary-color);
+    padding: 12px 12px 12px 30px;
+    margin-left: -12px;
+    margin-right: -12px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4), inset 0 0 20px rgba(37, 99, 235, 0.1);
+    animation: highlightGlow 2s ease-in-out infinite;
+}
+
+@keyframes highlightGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(37, 99, 235, 0.4), inset 0 0 20px rgba(37, 99, 235, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(37, 99, 235, 0.6), inset 0 0 25px rgba(37, 99, 235, 0.15);
+    }
 }
 
 /* Education Section */
@@ -639,7 +688,7 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     .name {
-        font-size: 2.5rem;
+        font-size: 2.0rem;
     }
 
     .title {
@@ -647,7 +696,7 @@ body {
     }
 
     .section-title {
-        font-size: 2rem;
+        font-size: 1.6rem;
     }
 
     .contact-buttons {
@@ -690,7 +739,7 @@ body {
     }
 
     .name {
-        font-size: 2rem;
+        font-size: 1.6rem;
     }
 
     .title {
@@ -698,8 +747,8 @@ body {
     }
 
     .profile-image {
-        width: 220px;
-        height: 220px;
+        width: 176px;
+        height: 176px;
     }
 
     .experience-card {
@@ -707,7 +756,7 @@ body {
     }
 
     .section-title {
-        font-size: 1.7rem;
+        font-size: 1.36rem;
     }
 }
 
