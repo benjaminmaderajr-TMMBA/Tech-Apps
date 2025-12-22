@@ -59,6 +59,32 @@ body {
     z-index: 0;
 }
 
+.border-text-overlay {
+    position: absolute;
+    top: 240px;
+    right: 20%;
+    z-index: 2;
+    text-align: right;
+    color: white;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.border-text-line1 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.border-text-line2 {
+    font-size: 1.3rem;
+    line-height: 1.2;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+}
+
 .hero-overlay {
     position: relative;
     z-index: 1;
