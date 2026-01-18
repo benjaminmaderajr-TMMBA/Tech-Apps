@@ -3,12 +3,31 @@ const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+require('dotenv').config();
+
+// Database connection
+const connectDB = require('./config/database');
 
 // Initialize Express app
 const app = express();
 
 // Port configuration
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
+connectDB();
+
+// Body parser middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// CORS middleware
+app.use(cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true
+}));
 
 // Security middleware - Helmet helps secure Express apps
 app.use(helmet({
@@ -28,42 +47,61 @@ app.use(helmet({
 app.use(compression());
 
 // Logging middleware - Log HTTP requests
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// Serve static files from 'public' directory
-app.use(express.static(path.join(__dirname, 'public'), {
-    maxAge: '1d', // Cache static assets for 1 day
-    etag: true
-}));
-
-// Route for home page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
+    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+    message: 'Too many requests from this IP, please try again later.',
+    standardHeaders: true,
+    legacyHeaders: false
 });
+app.use('/api/', limiter);
+
+// API Routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/resumes', require('./routes/resumes'));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.status(200).json({
+        success: true,
         status: 'OK',
-        message: 'Server is running',
+        message: 'AI Resume Builder API is running',
         timestamp: new Date().toISOString(),
-        uptime: process.uptime()
+        uptime: process.uptime(),
+        database: 'Connected'
     });
 });
 
-// API endpoint for contact info (can be extended later)
-app.get('/api/contact', (req, res) => {
-    res.json({
-        name: 'Benjamin Madera JR',
-        emails: {
-            usarmy: 'benjamin.maderajr@usarmy.vet',
-            gmail: 'benjamin.maderajr@gmail.com'
-        },
-        phone: '(407) 636-0708',
-        location: 'Lacey, WA 98516',
-        linkedin: 'https://www.linkedin.com/feed/'
+// Serve React build in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
     });
-});
+} else {
+    // Development mode - serve old portfolio for legacy support
+    app.use(express.static(path.join(__dirname, 'public'), {
+        maxAge: '1d',
+        etag: true
+    }));
+
+    app.get('/', (req, res) => {
+        res.json({
+            message: 'AI Resume Builder API',
+            version: '2.0.0',
+            endpoints: {
+                health: '/api/health',
+                auth: '/api/auth',
+                resumes: '/api/resumes'
+            },
+            documentation: 'Please use the React client on port 3000'
+        });
+    });
+}
 
 // 404 handler - Handle unknown routes
 app.use((req, res) => {
@@ -84,17 +122,24 @@ app.use((err, req, res, next) => {
 const server = app.listen(PORT, () => {
     console.log('┌─────────────────────────────────────────────────────┐');
     console.log('│                                                     │');
-    console.log('│   🚀 Benjamin Madera JR - Portfolio Server          │');
+    console.log('│   🚀 AI Resume Builder - API Server                 │');
     console.log('│                                                     │');
     console.log('│   Server Status: ✅ Running                         │');
     console.log(`│   Port: ${PORT}                                      │`);
     console.log(`│   URL: http://localhost:${PORT}                      │`);
     console.log('│   Environment: ' + (process.env.NODE_ENV || 'development').padEnd(37) + '│');
     console.log('│                                                     │');
-    console.log('│   Endpoints:                                        │');
-    console.log(`│   • Home: http://localhost:${PORT}/                  │`);
-    console.log(`│   • Health: http://localhost:${PORT}/health          │`);
-    console.log(`│   • API: http://localhost:${PORT}/api/contact        │`);
+    console.log('│   API Endpoints:                                    │');
+    console.log(`│   • Health: http://localhost:${PORT}/api/health      │`);
+    console.log(`│   • Auth: http://localhost:${PORT}/api/auth          │`);
+    console.log(`│   • Resumes: http://localhost:${PORT}/api/resumes    │`);
+    console.log('│                                                     │');
+    console.log('│   Features:                                         │');
+    console.log('│   ✓ User Authentication (JWT)                       │');
+    console.log('│   ✓ Resume Builder                                  │');
+    console.log('│   ✓ AI Content Generation (OpenAI)                  │');
+    console.log('│   ✓ ATS Score Analysis                              │');
+    console.log('│   ✓ Public Resume Showcase                          │');
     console.log('│                                                     │');
     console.log('│   Press Ctrl+C to stop the server                   │');
     console.log('│                                                     │');
