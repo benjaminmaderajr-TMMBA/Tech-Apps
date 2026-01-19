@@ -26,3 +26,6 @@ build/
 # Temporary files
 *.tmp
 .cache/
+
+# Cloned repositories
+Base44-Air-Resume-Copy-Cat/
